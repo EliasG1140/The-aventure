@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import data from './data.json'
+import data from './../db/data.json'
 import Opciones from './Opciones'
 import Historial from './Historial'
 
