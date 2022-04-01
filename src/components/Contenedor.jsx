@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import data from './../db/data.json'
+import dataJson from './../db/data.json'
 import Opciones from './Opciones'
 import Historial from './Historial'
 
@@ -7,28 +7,25 @@ class Contenedor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contador: 0,
+      contador: 1,
+      seleccionPrevia: '',
       historial: [],
-      seleccionPrevia: ""
-    }
-  }
-  
-  handleClick = ({target}) => {
-    let id = target.id;
-    if(this.state.contador >= 7){alert('Ya no hay más historias \n ¡Gracias por jugar! \n Estudiante: Jaime Elias Garcia Alvarado')}
-    else {
-      if(this.state.contador === 0 && id === "A")this.setState({contador: this.state.contador + 1, seleccionPrevia: "A"})
-      if(this.state.contador === 0 && id === "B")this.setState({contador: this.state.contador + 2, seleccionPrevia: "B"})
-      if(this.state.seleccionPrevia === "A" && id === "A")this.setState({contador: this.state.contador +2, seleccionPrevia: "A"})
-      if(this.state.seleccionPrevia === "A" && id === "B")this.setState({contador: this.state.contador +3, seleccionPrevia: "B"})
-      if(this.state.seleccionPrevia === "B" && id === "B")this.setState({contador: this.state.contador +2, seleccionPrevia: "B"})
-      if(this.state.seleccionPrevia === "B" && id === "A")this.setState({contador: this.state.contador +1, seleccionPrevia: "A"})
+      data: dataJson[0]
     }
   }
 
+  handleClick = ({target}) => {
+    this.setState({
+      contador: this.state.contador + 1,
+      seleccionPrevia: (target.id).toUpperCase()
+    })
+    console.log(this.state.data);
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.contador !== this.state.contador){
+    if(prevState.contador !== this.state.contador) {
       this.setState({
+        data: dataJson.find(e => e.id === `${this.state.contador}${this.state.seleccionPrevia.toLowerCase()}`),
         historial: [...this.state.historial, this.state.seleccionPrevia]
       })
     }
@@ -37,8 +34,8 @@ class Contenedor extends Component {
   render() { 
     return (
       <div className='layout'>
-        <h1 className='historia'>{data[this.state.contador].historia}</h1>
-        <Opciones opcionA={data[this.state.contador].opciones.a} opcionB={data[this.state.contador].opciones.b} handleClick={this.handleClick}/>
+        <h1 className='historia'>{this.state.data ? this.state.data.historia : "Fin"}</h1>
+        {this.state.data ? <Opciones opciones={this.state.data.opciones} handleClick={this.handleClick}/> : null}
         <Historial historial={this.state.historial} seleccionPrevia={this.state.seleccionPrevia}/>
       </div>
     );

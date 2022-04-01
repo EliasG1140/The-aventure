@@ -2,7 +2,7 @@ import Contenedor from "./components/Contenedor";
 
 function App() {
   return (
-    <div className="App">
+    <div className="">
       <Contenedor/>
     </div>
   );
